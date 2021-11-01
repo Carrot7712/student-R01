@@ -115,7 +115,7 @@ const adminController = {
   },
   getUsers: (req, res) => {
     return User.findAll({ raw: true, nest: true }).then(users => {
-      res.render('admin/users', { users: users })
+    res.render('admin/users', { users: users })
     })
       .catch(err => console.error(err))
   },
@@ -123,13 +123,13 @@ const adminController = {
     const id = req.params.id
     return User.findByPk(id).then(user => {
       if (user.email === 'root@example.com') {
-        req.flash('error_messages', '核心管理者的權限不可更動！')
+        req.flash('error_messages', '禁止變更管理者權限')
         return res.redirect('back')
       }
       user.isAdmin === false ? user.isAdmin = true : user.isAdmin = false
       return user.update({ isAdmin: user.isAdmin })
         .then(() => {
-          req.flash('success_messages', '已修改使用者權限！')
+          req.flash('success_messages', '使用者權限變更成功')
           res.redirect('/admin/users')
         })
     })
